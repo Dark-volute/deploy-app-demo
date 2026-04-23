@@ -1,0 +1,52 @@
+name: Build and Deploy Frontend
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'vite.config.js'
+      - '.github/workflows/deploy.yml'
+
+env:
+  QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
+  QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}
+  DEPLOY_API_URL: ${{ secrets.DEPLOY_API_URL }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 构建项目
+        run: npm run build
+
+      - name: 生成清单并上传到 API
+        run: npm run build:deploy
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: 上传成功通知
+        if: success()
+        run: |
+          echo "✅ 部署成功！"
+          echo "版本: $(cat package.json | grep '\"version\"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')"
+
+      - name: 上传失败通知
+        if: failure()
+        run: |
+          echo "❌ 部署失败！"
+          exit 1
