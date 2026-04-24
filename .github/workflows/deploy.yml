@@ -1,13 +1,11 @@
 name: Build and Deploy Frontend
 
 on:
-  push:
-    branches: [main, develop]
-    paths:
-      - 'src/**'
-      - 'package.json'
-      - 'vite.config.js'
-      - '.github/workflows/deploy.yml'
+  workflow_dispatch:  # 只允许手动/API 触发，不自动触发
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: false
 
 env:
   QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
@@ -25,7 +23,7 @@ jobs:
       - name: 设置 Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'npm'
 
       - name: 安装依赖
@@ -50,3 +48,4 @@ jobs:
         run: |
           echo "❌ 部署失败！"
           exit 1
+
