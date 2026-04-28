@@ -15,7 +15,7 @@ const QINIU_CONFIG = {
   bucket: process.env.QINIU_BUCKET || 'fe-assets',
   domain: process.env.QINIU_DOMAIN || 'https://up-z2.qiniup.com',
   zone: process.env.QINIU_ZONE || 'Zone_z2',
-  pathPrefix: `test/${process.env.DEPLOY_VERSION || pkg.version}`,
+  pathPrefix: `test/${process.env.DEPLOY_VERSION}`,
 }
 
 // https://vite.dev/config/
