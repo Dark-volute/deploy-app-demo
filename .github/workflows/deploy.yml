@@ -14,11 +14,12 @@ env:
   QINIU_DOMAIN: ${{ secrets.QINIU_DOMAIN || 'https://up-z2.qiniup.com' }}
   DEPLOY_API_URL: ${{ secrets.DEPLOY_API_URL }}
   GITHUB_SHA: ${{ github.sha }}
-  DEPLOY_VERSION: ${{ inputs.version }}
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_VERSION: ${{ inputs.version }}
 
     steps:
       - name: 检出代码
