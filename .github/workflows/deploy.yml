@@ -48,4 +48,4 @@ jobs:
 
       - name: 部署成功
         if: success()
-        run: echo "✅ 部署成功！版本: ${{ inputs.version }}"
+        run: echo "deploy success, version: ${{ inputs.version }}"
