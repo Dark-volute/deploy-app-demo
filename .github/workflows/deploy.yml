@@ -35,15 +35,15 @@ jobs:
       - name: Build and upload
         run: npm run build:deploy
 
-      - name: Deploy HTML via SSH
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "dist/index.html"
-          target: "/var/www/my-react-app/v${{ env.DEPLOY_VERSION }}"
-          strip_components: 1
+      # - name: Deploy HTML via SSH
+      #   uses: appleboy/scp-action@v0.1.7
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USER }}
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     source: "dist/index.html"
+      #     target: "/var/www/my-react-app/v${{ env.DEPLOY_VERSION }}"
+      #     strip_components: 1
 
       - name: Done
         if: success()

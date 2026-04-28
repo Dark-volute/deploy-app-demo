@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { createInjectCdnPlugin, createQiniuUploadPlugin } from './vite-plugins.js'
-import pkg from './package.json' assert { type: 'json' }
 
 // CDN 配置
 const CDN_CONFIG = {
@@ -16,7 +15,7 @@ const QINIU_CONFIG = {
   bucket: process.env.QINIU_BUCKET || 'fe-assets',
   domain: process.env.QINIU_DOMAIN || 'https://up-z2.qiniup.com',
   zone: process.env.QINIU_ZONE || 'Zone_z2',
-  pathPrefix: `${pkg.name}/${process.env.DEPLOY_VERSION || pkg.version}`,
+  pathPrefix: `test/${process.env.DEPLOY_VERSION || pkg.version}`,
 }
 
 // https://vite.dev/config/
