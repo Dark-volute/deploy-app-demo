@@ -3,12 +3,14 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import pkg from '../package.json' assert { type: 'json' };
 
+const pkg = {
+  name: 'test'
+}
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DEPLOY_API_URL = process.env.DEPLOY_API_URL || 'http://localhost:3000/api';
-const DEPLOY_VERSION = process.env.DEPLOY_VERSION || pkg.version;
+const DEPLOY_VERSION = process.env.DEPLOY_VERSION
 
 async function generateManifest() {
   console.log('📝 生成版本清单...');
