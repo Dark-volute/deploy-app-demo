@@ -5,23 +5,18 @@ import pkg from './package.json' assert { type: 'json' }
 
 // CDN 配置
 const CDN_CONFIG = {
-  scripts: [
-    'https://cdn.example.com/lib1@1.0.0.min.js',
-    'https://cdn.example.com/lib2@2.0.0.min.js',
-  ],
-  styles: [
-    'https://cdn.example.com/style@1.0.0.min.css',
-  ],
+  scripts: [],
+  styles: [],
 }
 
-// 七牛云配置
+// 七牛云配置 — 从环境变量读取
 const QINIU_CONFIG = {
-  accessKey: 'CmAKcOAfAkVbuC8zYvM35G5mqwPZQztcvHoLTrep',
-  secretKey: 'CwCkODS-aS8V0o44pezTCavhZfC29w341fZTGU2D',
-  bucket: 'fe-assets',
-  domain: 'https://up-z2.qiniup.com',
-  zone: 'Zone_z2',
-  pathPrefix: `${pkg.name}/${pkg.version}`,
+  accessKey: process.env.QINIU_ACCESS_KEY || '',
+  secretKey: process.env.QINIU_SECRET_KEY || '',
+  bucket: process.env.QINIU_BUCKET || 'fe-assets',
+  domain: process.env.QINIU_DOMAIN || 'https://up-z2.qiniup.com',
+  zone: process.env.QINIU_ZONE || 'Zone_z2',
+  pathPrefix: `${pkg.name}/${process.env.DEPLOY_VERSION || pkg.version}`,
 }
 
 // https://vite.dev/config/
@@ -29,7 +24,6 @@ export default defineConfig({
   plugins: [
     react(),
     createInjectCdnPlugin(CDN_CONFIG),
-    createQiniuUploadPlugin(QINIU_CONFIG),
+    ...(QINIU_CONFIG.accessKey ? [createQiniuUploadPlugin(QINIU_CONFIG)] : []),
   ],
 })
-

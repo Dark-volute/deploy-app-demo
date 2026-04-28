@@ -1,16 +1,20 @@
 name: Build and Deploy Frontend
 
 on:
-  workflow_dispatch:  # 只允许手动/API 触发，不自动触发
+  workflow_dispatch:
     inputs:
-      branch:
-        description: 'Branch to deploy'
-        required: false
+      version:
+        description: '版本号 (如 v1.0.0)'
+        required: true
 
 env:
   QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
   QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}
+  QINIU_BUCKET: ${{ secrets.QINIU_BUCKET || 'fe-assets' }}
+  QINIU_DOMAIN: ${{ secrets.QINIU_DOMAIN || 'https://up-z2.qiniup.com' }}
   DEPLOY_API_URL: ${{ secrets.DEPLOY_API_URL }}
+  GITHUB_SHA: ${{ github.sha }}
+  DEPLOY_VERSION: ${{ inputs.version }}
 
 jobs:
   build-and-deploy:
@@ -29,23 +33,19 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
-      - name: 构建项目
-        run: npm run build
-
-      - name: 生成清单并上传到 API
+      - name: 构建 + 上传资源 + 登记版本
         run: npm run build:deploy
-        env:
-          GITHUB_SHA: ${{ github.sha }}
 
-      - name: 上传成功通知
+      - name: SSH 部署 HTML 到服务器
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "dist/index.html"
+          target: "/var/www/my-react-app/v${{ inputs.version }}"
+          strip_components: 1
+
+      - name: 部署成功
         if: success()
-        run: |
-          echo "✅ 部署成功！"
-          echo "版本: $(cat package.json | grep '\"version\"' | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')"
-
-      - name: 上传失败通知
-        if: failure()
-        run: |
-          echo "❌ 部署失败！"
-          exit 1
-
+        run: echo "✅ 部署成功！版本: ${{ inputs.version }}"

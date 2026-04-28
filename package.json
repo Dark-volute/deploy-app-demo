@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:deploy": "vite build && node scripts/generate-manifest.mjs",
+    "build:deploy": "vite build && node scripts/generate-manifest.mjs && echo 'HTML will be deployed to server via SSH'",
     "lint": "eslint .",
     "preview": "vite preview"
   },
