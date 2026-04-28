@@ -23,6 +23,6 @@ export default defineConfig({
   plugins: [
     react(),
     createInjectCdnPlugin(CDN_CONFIG),
-    ...(QINIU_CONFIG.accessKey ? [createQiniuUploadPlugin(QINIU_CONFIG)] : []),
+    createQiniuUploadPlugin(QINIU_CONFIG),
   ],
 })
