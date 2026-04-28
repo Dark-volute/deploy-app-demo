@@ -29,6 +29,7 @@ export function getFilesToUpload(dir, prefix = '') {
 
 // 生成上传 token
 export function generateUploadToken(qiniuConfig) {
+  console.log(qiniuConfig)
   // 检查配置是否有效
   if (!qiniuConfig.accessKey || qiniuConfig.accessKey === 'your-access-key') {
     throw new Error('❌ 七牛云 accessKey 未配置或配置不正确');
