@@ -19,6 +19,7 @@ jobs:
       DEPLOY_API_URL: ${{ secrets.DEPLOY_API_URL }}
       GITHUB_SHA: ${{ github.sha }}
       DEPLOY_VERSION: ${{ inputs.version }}
+      DEPLOY_ENV: ${{ inputs.environment }}
 
     steps:
       - name: Checkout
